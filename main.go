@@ -30,5 +30,5 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hi")
+	fmt.Fprint(w, "<div>Hi</div>")
 }
