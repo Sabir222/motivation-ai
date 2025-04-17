@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Motivation Letter Generator</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+      /* Simple loading indicator style */
+      .htmx-indicator {
+        display: none;
+        opacity: 0;
+        transition: opacity 200ms ease-in;
+      }
+      .htmx-request .htmx-indicator {
+        display: inline-block; /* Or block, depending on layout */
+        opacity: 1;
+      }
+      .htmx-request.htmx-indicator {
+        opacity: 1;
+      }
+
+      /* Hide button text when loading */
+      .htmx-request .hide-when-loading {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div
+      class="container mx-auto max-w-3xl p-6 my-10 bg-white rounded-lg shadow-md"
+    >
+      <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">
+        AI Motivation Letter Generator
+      </h1>
+
+      <!-- Make sure the form has an ID -->
+      <form id="letter-form" class="space-y-6">
+        <div class="input-fields flex flex-col space-y-4">
+          <div>
+            <label
+              for="your-name"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Your Full Name:</label
+            >
+            <input
+              type="text"
+              id="your-name"
+              name="your_name"
+              placeholder="e.g., Jane Doe"
+              value="Sabir Koutabi"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              for="position"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Position Applying For:</label
+            >
+            <input
+              type="text"
+              id="position"
+              name="position"
+              placeholder="e.g., Software Engineer Intern"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              for="company-name"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Company Name:</label
+            >
+            <input
+              type="text"
+              id="company-name"
+              name="company_name"
+              placeholder="e.g., Tech Solutions Inc."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              for="key-skills"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Your Key Skills (comma-separated):</label
+            >
+            <textarea
+              id="key-skills"
+              name="key_skills"
+              rows="3"
+              placeholder="e.g., JavaScript, React, Teamwork, Problem Solving"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+ TypeScript, JavaScript, React, CSS, TailwindCSS, Next.js, Vue.js, Node.js, Express.js, Go, SQL/PostgreSQL, MongoDB, Git, Docker, API Design, English, French, Arabic, Dedicated, Analytical, Problem Solver, Detail Oriented, Continuous Learner</textarea
+            >
+          </div>
+
+          <div>
+            <label
+              for="why-interested"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Why are you interested in this position/company?</label
+            >
+            <textarea
+              id="why-interested"
+              name="why_interested"
+              rows="4"
+              placeholder="Briefly explain your motivation..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
+            >
+because it aligns perfectly with both my technical strengths and my passion for building meaningful user experiences. I admire how the company consistently delivers high-quality digital products and fosters a culture of innovation and collaboration.
+            </textarea>
+          </div>
+
+          <div>
+            <label
+              for="relevant-experience"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Relevant Experience Snippet:</label
+            >
+            <textarea
+              id="relevant-experience"
+              name="relevant_experience"
+              rows="3"
+              placeholder="Describe a key project or experience..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <!-- Added HTMX attributes here -->
+          <button
+            type="button"
+            id="generate-btn"
+            hx-post="/generate"
+            hx-include="#letter-form"
+            hx-target="#output-area"
+            hx-swap="innerHTML"
+            hx-indicator="#loading-spinner"
+            class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+          >
+            <span class="hide-when-loading">Generate Letter</span>
+            <svg
+              id="loading-spinner"
+              class="htmx-indicator animate-spin ml-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <div
+        id="output-area"
+        class="mt-10 p-6 bg-gray-50 border border-gray-200 rounded-md min-h-[150px] prose max-w-none"
+      >
+        <p class="text-gray-500 italic">
+          Your generated motivation letter will appear here...
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
