@@ -62,7 +62,7 @@ func main() {
 	http.HandleFunc("/generate", generateHandler)
 
 	// Start server
-	port := os.Getenv("PORT") // Also reads PORT from .env if set
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
 	}
@@ -118,8 +118,7 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	htmlResponse := "<h2 class='text-xl font-semibold mb-4'>Generated Motivation Letter:</h2>"
-	htmlResponse += "<div class='whitespace-pre-wrap'>"
+	htmlResponse := "<div class='whitespace-pre-wrap'>"
 	htmlResponse += strings.ReplaceAll(generatedText, "\n", "<br />")
 	htmlResponse += "</div>"
 
@@ -131,37 +130,35 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 func buildPrompt(name, position, company, skills, interest, experience string) string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("Generate a professional and enthusiastic motivation letter for %s applying for the position of %s at %s.\n\n", name, position, company))
+
+	sb.WriteString("Use the example below **as a base template**. Modify only where necessary using the provided information.\n\n")
+	sb.WriteString("only generale the letter dont add generated letter : ")
 	sb.WriteString("Key information to include:\n")
 	sb.WriteString(fmt.Sprintf("- Applicant's Name: %s\n", name))
 	sb.WriteString(fmt.Sprintf("- Position Applying For: %s\n", position))
 	sb.WriteString(fmt.Sprintf("- Company Name: %s\n", company))
 	if skills != "" {
-		sb.WriteString(fmt.Sprintf("- Highlight these key skills: %s\n", skills))
+		sb.WriteString(fmt.Sprintf("- if these skills are not already in the letter provided add them: %s\n", skills))
 	}
 	sb.WriteString(fmt.Sprintf("- Reason for interest in the position/company: %s\n", interest))
 	if experience != "" {
 		sb.WriteString(fmt.Sprintf("- Briefly mention this relevant experience: %s\n", experience))
 	}
-	sb.WriteString("\nInstructions:\n")
-	sb.WriteString("- The tone should be professional, confident, and genuinely enthusiastic.")
-	sb.WriteString("- Structure the letter logically (introduction, body paragraphs highlighting skills/interest/experience, conclusion).")
 	sb.WriteString("- Ensure the letter flows well and is grammatically correct.")
 	sb.WriteString("- Do not include placeholders like '[Your Name]' or '[Company Name]' in the final letter; use the provided information directly.")
-	sb.WriteString("Take inspiration from the following example, adapting the tone, structure, and professionalism, but generate original content tailored to the new applicant:\n\n")
+	sb.WriteString("Take inspiration from the following example, but make the letter the backbone and the template only modify the new information \n\n")
 
-	sb.WriteString("----- BEGIN INSPIRATION LETTER -----\n")
+	sb.WriteString("----- BEGIN TEMPLATE LETTER -----\n")
 	sb.WriteString("Sabir Koutabi\n")
 	sb.WriteString("sabirkoutabi@gmail.com | sabirkoutabi.tech | linkedin.com/in/skoutabi | x.com/sabirkoutabi\n")
-	sb.WriteString("* today's date here *, 2025\n")
-	sb.WriteString("Lena Berger\n")
-	sb.WriteString("Senior Technical Recruiter\n")
-	sb.WriteString("Netways GmbH\n")
+	sb.WriteString("Hiring manager *if hiring manager name was provided add it here *\n")
+	sb.WriteString("Netways GmbH *Company's name*\n")
 
 	sb.WriteString("Subject: Motivation Letter - Application for Front-End Web Developer\n\n")
 
-	sb.WriteString("Dear Ms. Berger,\n\n")
+	sb.WriteString("Dear Hiring manager *if hiring manager name was provided add it here*\n\n")
 
-	sb.WriteString("I am writing to express my strong interest in the Front-End Web Developer position at Netways GmbH, as advertised on your company’s careers page. ")
+	sb.WriteString("I am writing to express my strong interest in the Front-End Web Developer position at Netways GmbH.")
 	sb.WriteString("My journey from a detail-oriented background in finance at CIH Bank to a dedicated software engineer, trained through the rigorous ALX Africa/Holberton School program, ")
 	sb.WriteString("provides me with a unique blend of analytical thinking and technical proficiency. ")
 	sb.WriteString("My specialization in front-end development, complemented by full-stack capabilities (including technologies like TypeScript, GO, Node.js, SQL/PostgreSQL, and API design), ")
@@ -180,7 +177,8 @@ func buildPrompt(name, position, company, skills, interest, experience string) s
 	sb.WriteString("Thank you for your time and consideration.\n\n")
 	sb.WriteString("Sincerely,\n")
 	sb.WriteString("Sabir Koutabi\n")
-	sb.WriteString("----- END INSPIRATION LETTER -----\n\n")
+	sb.WriteString("----- END TEMPLATE LETTER -----\n\n")
+	sb.WriteString("AGAIN !!! very important only generale the letter dont add generated letter : ")
 	sb.WriteString("- Again Do not include placeholders like '[Your Name]' or '[Company Name]' in the final letter; use the provided information directly.")
 	return sb.String()
 }
