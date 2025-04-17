@@ -177,14 +177,80 @@ because it aligns perfectly with both my technical strengths and my passion for 
         </div>
       </form>
 
-      <div
-        id="output-area"
-        class="mt-10 p-6 bg-gray-50 border border-gray-200 rounded-md min-h-[150px] prose max-w-none"
-      >
-        <p class="text-gray-500 italic">
-          Your generated motivation letter will appear here...
-        </p>
+      <div class="mt-10">
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-lg font-medium text-gray-800">Generated Letter</h2>
+          <!-- Copy button - initially hidden -->
+          <button
+            id="copy-btn"
+            class="hidden px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded transition duration-150 ease-in-out flex items-center"
+            onclick="copyToClipboard()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+            Copy
+          </button>
+        </div>
+
+        <div
+          id="output-area"
+          class="p-6 bg-gray-50 border border-gray-200 rounded-md min-h-[150px] prose max-w-none"
+        >
+          <p class="text-gray-500 italic">
+            Your generated motivation letter will appear here...
+          </p>
+        </div>
       </div>
     </div>
+
+    <script>
+      // Function to copy the content to clipboard
+      function copyToClipboard() {
+        const content = document.getElementById("output-area").innerText;
+        navigator.clipboard.writeText(content).then(() => {
+          // Change button text to "Copied!" temporarily
+          const copyBtn = document.getElementById("copy-btn");
+          const originalText = copyBtn.innerHTML;
+
+          copyBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Copied!
+          `;
+          copyBtn.classList.remove("bg-gray-200", "hover:bg-gray-300");
+          copyBtn.classList.add("bg-green-200", "hover:bg-green-300");
+
+          // After 2 seconds, change back to the original text
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.classList.remove("bg-green-200", "hover:bg-green-300");
+            copyBtn.classList.add("bg-gray-200", "hover:bg-gray-300");
+          }, 2000);
+        });
+      }
+
+      // Show the copy button when content is generated
+      document
+        .getElementById("generate-btn")
+        .addEventListener("click", function () {
+          // We'll show the copy button after a short delay to ensure the content is loaded
+          setTimeout(() => {
+            document.getElementById("copy-btn").classList.remove("hidden");
+          }, 500);
+        });
+    </script>
   </body>
 </html>

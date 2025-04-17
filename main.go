@@ -152,7 +152,7 @@ func buildPrompt(name, position, company, skills, interest, experience string) s
 	sb.WriteString("----- BEGIN INSPIRATION LETTER -----\n")
 	sb.WriteString("Sabir Koutabi\n")
 	sb.WriteString("sabirkoutabi@gmail.com | sabirkoutabi.tech | linkedin.com/in/skoutabi | x.com/sabirkoutabi\n")
-	sb.WriteString("April 17, 2025\n")
+	sb.WriteString("* today's date here *, 2025\n")
 	sb.WriteString("Lena Berger\n")
 	sb.WriteString("Senior Technical Recruiter\n")
 	sb.WriteString("Netways GmbH\n")
