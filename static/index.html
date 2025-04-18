@@ -4,10 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Motivation Letter Generator</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Add jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+      /* Optional: Improve PDF text rendering slightly */
+      #output-area p {
+        margin-bottom: 1em; /* Add space between paragraphs */
+      }
+    </style>
   </head>
   <body class="bg-gray-100 font-sans leading-normal tracking-normal">
     <div
@@ -17,8 +24,8 @@
         AI Motivation Letter Generator
       </h1>
 
-      <!-- Make sure the form has an ID -->
       <form id="letter-form" class="space-y-6">
+        <!-- Input fields remain the same -->
         <div class="input-fields flex flex-col space-y-4">
           <div>
             <label
@@ -82,44 +89,43 @@
               placeholder="e.g., JavaScript, React, Teamwork, Problem Solving"
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
-             TypeScript, JavaScript, React, CSS, TailwindCSS, Next.js, Vue.js, Node.js, Express.js, Go, SQL/PostgreSQL, MongoDB, Git, Docker, API Design, English, French, Arabic, Dedicated, Analytical, Problem Solver, Detail Oriented, Continuous Learner</textarea
+aws</textarea
             >
           </div>
-
-          <div>
-            <label
-              for="why-interested"
-              class="block text-sm font-medium text-gray-700 mb-1"
-              >Why are you interested in this position/company?</label
-            >
-            <textarea
-              id="why-interested"
-              name="why_interested"
-              rows="4"
-              placeholder="Briefly explain your motivation..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              required
-            >
-            because it aligns perfectly with both my technical strengths and my passion for building meaningful user experiences. I admire how the company consistently delivers high-quality digital products and fosters a culture of innovation and collaboration.
-            </textarea>
-          </div>
-
-          <div>
-            <label
-              for="relevant-experience"
-              class="block text-sm font-medium text-gray-700 mb-1"
-              >Relevant Experience Snippet:</label
-            >
-            <textarea
-              id="relevant-experience"
-              name="relevant_experience"
-              rows="3"
-              placeholder="Describe a key project or experience..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              yutapp internship , alot freelance projects , and personal projects 
-            </textarea>
-          </div>
+          <!--<div>-->
+          <!--  <label-->
+          <!--    for="why-interested"-->
+          <!--    class="block text-sm font-medium text-gray-700 mb-1"-->
+          <!--    >Why are you interested in this position/company?</label-->
+          <!--  >-->
+          <!--  <textarea-->
+          <!--    id="why-interested"-->
+          <!--    name="why_interested"-->
+          <!--    rows="4"-->
+          <!--    placeholder="Briefly explain your motivation..."-->
+          <!--    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"-->
+          <!--    required-->
+          <!--  >-->
+          <!--  because it aligns perfectly with both my technical strengths and my passion for building meaningful user experiences. I admire how the company consistently delivers high-quality digital products and fosters a culture of innovation and collaboration.-->
+          <!--  </textarea>-->
+          <!--</div>-->
+          <!---->
+          <!--<div>-->
+          <!--  <label-->
+          <!--    for="relevant-experience"-->
+          <!--    class="block text-sm font-medium text-gray-700 mb-1"-->
+          <!--    >Relevant Experience Snippet:</label-->
+          <!--  >-->
+          <!--  <textarea-->
+          <!--    id="relevant-experience"-->
+          <!--    name="relevant_experience"-->
+          <!--    rows="3"-->
+          <!--    placeholder="Describe a key project or experience..."-->
+          <!--    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"-->
+          <!--  >-->
+          <!--    yutapp internship , alot freelance projects , and personal projects-->
+          <!--  </textarea>-->
+          <!--</div>-->
         </div>
 
         <div class="pt-4">
@@ -205,7 +211,6 @@
             </button>
           </div>
         </div>
-
         <div
           id="output-area"
           class="p-6 bg-gray-50 border border-gray-200 rounded-md min-h-[150px] prose max-w-none"
@@ -218,80 +223,110 @@
     </div>
 
     <script>
-      function downloadAsPdf() {
-        // Get the content element
-        const element = document.getElementById("output-area");
-
-        // Set options for PDF generation
-        const options = {
-          margin: 1,
-          filename: "motivation-letter.pdf",
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
-        };
-
-        // Generate and download the PDF
-        html2pdf().set(options).from(element).save();
-      }
-
-      document
-        .getElementById("generate-btn")
-        .addEventListener("click", function () {
-          // We'll show both buttons after a short delay
-          setTimeout(() => {
-            document.getElementById("copy-btn").classList.remove("hidden");
-            document
-              .getElementById("download-pdf-btn")
-              .classList.remove("hidden");
-          }, 500);
-        });
-
-      document.body.addEventListener("htmx:afterSwap", function (event) {
-        if (event.detail.target.id === "output-area") {
-          document.getElementById("copy-btn").classList.remove("hidden");
-          document
-            .getElementById("download-pdf-btn")
-            .classList.remove("hidden");
-        }
-      });
       function copyToClipboard() {
-        const content = document.getElementById("output-area").innerText;
-        navigator.clipboard.writeText(content).then(() => {
-          const copyBtn = document.getElementById("copy-btn");
-          const originalText = copyBtn.innerHTML;
-
-          copyBtn.innerHTML = `
+        const contentElement = document.getElementById("output-area");
+        const content = contentElement.innerText; // Use innerText for better line break handling
+        navigator.clipboard
+          .writeText(content)
+          .then(() => {
+            const copyBtn = document.getElementById("copy-btn");
+            const originalHTML = copyBtn.innerHTML;
+            copyBtn.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
             Copied!
           `;
-          copyBtn.classList.remove("bg-gray-200", "hover:bg-gray-300");
-          copyBtn.classList.add("bg-green-200", "hover:bg-green-300");
+            copyBtn.classList.remove(
+              "bg-gray-200",
+              "hover:bg-gray-300",
+              "text-gray-700",
+            );
+            copyBtn.classList.add(
+              "bg-green-200",
+              "hover:bg-green-300",
+              "text-green-700",
+            );
+            setTimeout(() => {
+              copyBtn.innerHTML = originalHTML;
+              copyBtn.classList.remove(
+                "bg-green-200",
+                "hover:bg-green-300",
+                "text-green-700",
+              );
+              copyBtn.classList.add(
+                "bg-gray-200",
+                "hover:bg-gray-300",
+                "text-gray-700",
+              );
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Failed to copy text: ", err);
+            alert(
+              "Failed to copy text. Your browser might not support this feature or requires specific permissions.",
+            );
+          });
+      }
 
-          // After 2 seconds, change back to the original text
-          setTimeout(() => {
-            copyBtn.innerHTML = originalText;
-            copyBtn.classList.remove("bg-green-200", "hover:bg-green-300");
-            copyBtn.classList.add("bg-gray-200", "hover:bg-gray-300");
-          }, 2000);
+      // pdf function
+
+      function downloadAsPdf() {
+        const { jsPDF } = window.jspdf;
+
+        html2canvas(document.getElementById("output-area"), {
+          scale: 3,
+          useCORS: true,
+        }).then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("p", "mm", "a4");
+
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+
+          const imgProps = pdf.getImageProperties(imgData);
+          const pdfWidth = pageWidth;
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+          let position = 10;
+          pdf.addImage(imgData, "PNG", 10, position, pdfWidth - 20, pdfHeight);
+          pdf.save("motivation_letter.pdf");
         });
       }
+
+      document.body.addEventListener("htmx:afterSwap", function (event) {
+        if (
+          event.detail.target.id === "output-area" &&
+          event.detail.xhr.status >= 200 &&
+          event.detail.xhr.status < 300
+        ) {
+          const outputArea = document.getElementById("output-area");
+          const placeholderText =
+            "Your generated motivation letter will appear here...";
+          // Check if the output area is not empty and not the placeholder
+          if (
+            outputArea &&
+            outputArea.innerText.trim() &&
+            outputArea.innerText.trim() !== placeholderText
+          ) {
+            document.getElementById("copy-btn").classList.remove("hidden");
+            document
+              .getElementById("download-pdf-btn")
+              .classList.remove("hidden");
+          } else {
+            document.getElementById("copy-btn").classList.add("hidden");
+            document.getElementById("download-pdf-btn").classList.add("hidden");
+          }
+        }
+      });
 
       document
         .getElementById("generate-btn")
         .addEventListener("click", function () {
-          // We'll show the copy button after a short delay to ensure the content is loaded
-          setTimeout(() => {
-            document.getElementById("copy-btn").classList.remove("hidden");
-          }, 500);
+          // Hide buttons immediately on click, let htmx:afterSwap handle showing them
+          document.getElementById("copy-btn").classList.add("hidden");
+          document.getElementById("download-pdf-btn").classList.add("hidden");
         });
-      document.body.addEventListener("htmx:afterSwap", function (event) {
-        if (event.detail.target.id === "output-area") {
-          document.getElementById("copy-btn").classList.remove("hidden");
-        }
-      });
     </script>
   </body>
 </html>
