@@ -92,14 +92,14 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 	position := r.FormValue("position")
 	companyName := r.FormValue("company_name")
 	keySkills := r.FormValue("key_skills")
-
+	hiringManager := r.FormValue("hiring_name")
 	if yourName == "" || position == "" || companyName == "" {
 		log.Println("Validation Error: Missing required fields")
 		http.Error(w, "<p class='text-red-600'>Please fill in all required fields (Name, Position, Company, Why Interested).</p>", http.StatusBadRequest)
 		return
 	}
 
-	prompt := buildPrompt(yourName, position, companyName, keySkills)
+	prompt := buildPrompt(yourName, position, companyName, keySkills, hiringManager)
 	log.Printf("Generated Prompt: %s\n", prompt)
 
 	apiKey := os.Getenv("GEMINI_API_KEY")
@@ -125,7 +125,7 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Successfully generated and returned letter.")
 }
 
-func buildPrompt(name, position, company, skills string) string {
+func buildPrompt(name, position, company, skills, manager string) string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf(" ill give you a motivation letter and i want you just to modify the variable , but please leave the letter core intact only change the name position company and here all the details : name: %s ,position : %s company: %s.\n\n", name, position, company))
 
@@ -134,6 +134,7 @@ func buildPrompt(name, position, company, skills string) string {
 	sb.WriteString(fmt.Sprintf("- Applicant's Name: %s\n", name))
 	sb.WriteString(fmt.Sprintf("- Position Applying For: %s\n", position))
 	sb.WriteString(fmt.Sprintf("- Company Name: %s\n", company))
+	sb.WriteString(fmt.Sprintf("- Hiring manager Name: %s\n", manager))
 	if skills != "" {
 		sb.WriteString(fmt.Sprintf("- add these skills to the skills already in the letter please :%s\n", skills))
 	}
